@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
+    <meta name="description" content="A local knowledge testing platform."/>
+    <title>Knowledge Test</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <header>
+        <h1>Certified in Cybersecurity certification (CC) MockUp Test</h1>
+    </header>
+
+    <main>
+        <section id="intro-section">
+            <p>Welcome to the Knowledge Test. You have 120 minutes to answer 100 questions. Good luck!</p>
+            <button id="start-btn">Start Test</button>
+        </section>
+
+        <section id="test-section" class="hidden">
+            <div class="test-header">
+                <div class="timer">
+                    <span>Time Remaining: <strong id="timer"></strong></span>
+                </div>
+                <div class="question-progress">
+                    Question <span id="current-question-index"></span> of <span id="total-questions"></span>
+                </div>
+            </div>
+            
+            <div id="question-container"></div>
+        </section>
+
+        <section id="results-section" class="hidden">
+            <h2>Your Results</h2>
+            <p id="score-display"></p>
+            <button id="retest-btn">Retest</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2024 Enterprise Security Management</p>
+    </footer>
+
+<!-- Password gate -->
+<script>
+  // SHA-256 hash ของรหัส: kvangtestcc
+  const PASSWORD_HASH =
+    "8b7e0b6d0c9c6c6c1b18a1f9a1e4bb5d7c98c47c1c39f9f2e45f1c6c2e4f6e6d";
+
+  async function sha256(text) {
+    const data = new TextEncoder().encode(text);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  (async () => {
+    const pass = prompt("กรอกรหัสเพื่อเข้าแบบทดสอบ");
+
+    // ไม่กรอก / กด cancel → เด้งออก
+    if (!pass) {
+      document.body.innerHTML = "<h2>Access denied</h2>";
+      throw new Error("Access denied");
+    }
+
+    const inputHash = await sha256(pass);
+
+    // รหัสผิด → เด้งออก
+    if (inputHash !== PASSWORD_HASH) {
+      document.body.innerHTML = "<h2>Access denied</h2>";
+      throw new Error("Access denied");
+    }
+
+    // รหัสถูก → ให้โหลด script.js ต่อ
+  })();
+</script>
+
+<!-- ตัวข้อสอบ -->
+    <script src="js/script.js"></script>
+</body>
+</html>
