@@ -43,6 +43,7 @@
     </footer>
 
 <!-- Password gate -->
+<!-- Password gate -->
 <script>
   // SHA-256 hash ของรหัส: kvangtestcc
   const PASSWORD_HASH =
@@ -56,12 +57,13 @@
   }
 
   (async () => {
-    const pass = prompt("กรอกรหัสเพื่อเข้าแบบทดสอบ");
+    // trim กันช่องว่าง + รองรับกด cancel
+    const pass = (prompt("กรอกรหัสเพื่อเข้าแบบทดสอบ") || "").trim();
 
     // ไม่กรอก / กด cancel → เด้งออก
     if (!pass) {
       document.body.innerHTML = "<h2>Access denied</h2>";
-      throw new Error("Access denied");
+      return;
     }
 
     const inputHash = await sha256(pass);
@@ -69,11 +71,10 @@
     // รหัสผิด → เด้งออก
     if (inputHash !== PASSWORD_HASH) {
       document.body.innerHTML = "<h2>Access denied</h2>";
-      throw new Error("Access denied");
+      return;
     }
 
-    // รหัสถูก → ให้โหลด script.js ต่อ
-
+    // ✅ รหัสถูก → โหลด js/script.js หลังผ่านรหัส
     const s = document.createElement("script");
     s.src = "js/script.js";
     document.body.appendChild(s);
@@ -85,6 +86,7 @@
  
 </body>
 </html>
+
 
 
 
